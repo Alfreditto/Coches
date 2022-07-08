@@ -8,14 +8,15 @@ public class CarController : MonoBehaviour
 {
     //[HideInInspector]
     [Range(0, 90), SerializeField, Tooltip("Velocidad actual del coche")]
-    private float speed, aceleration = 0.03f, maxSpeed = 50.0f;
+    private float speed, aceleration = 0.01f, maxSpeed = 60.0f;
 
     [Range(0, 100), SerializeField, Tooltip("Velocidad de giro del coche")]
     public float turnSpeed = 50f;
 
     private float horizontalInput, verticalInput;
 
-    [SerializeField] private GameObject carretera;
+    [SerializeField]
+    private GameObject carretera;
 
     // Start is called before the first frame update
     void Start()
