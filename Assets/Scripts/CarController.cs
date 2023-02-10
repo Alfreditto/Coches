@@ -15,8 +15,9 @@ public class CarController : MonoBehaviour
 
     private float horizontalInput, verticalInput;
 
-    [SerializeField]
-    private GameObject carretera;
+    [SerializeField] private GameObject carretera;
+
+    public float Speed => speed;
 
     // Start is called before the first frame update
     void Start()
@@ -28,10 +29,14 @@ public class CarController : MonoBehaviour
     {
         verticalInput = Input.GetAxis("Vertical");
         horizontalInput = Input.GetAxis("Horizontal");
-        ConprobarSiEstaEnLaCarretera();
-        Acelerar();
+        ComprobarSiEstaEnLaCarretera();
+        if (ComprobarSiNoEstaVolcado())
+        {
+            Acelerar();
 
-        AcelerarAtras();
+            AcelerarAtras();
+        }
+
         if (verticalInput is 0)
         {
             PonerEnReposo();
@@ -42,13 +47,19 @@ public class CarController : MonoBehaviour
         transform.Translate(Vector3.forward * (speed * Time.deltaTime)); //0,0,1
 
         //girar
-        if (speed is not 0)
+        if (speed is not 0 && ComprobarSiNoEstaVolcado())
         {
-            transform.Rotate(Vector3.up * (turnSpeed * Time.deltaTime * horizontalInput));
+            var direccion = (speed > 0) ? horizontalInput : -horizontalInput;
+            transform.Rotate(Vector3.up * (turnSpeed * Time.deltaTime * direccion));
         }
     }
 
-    private void ConprobarSiEstaEnLaCarretera()
+    private bool ComprobarSiNoEstaVolcado()
+    {
+        return transform.rotation.eulerAngles.x is < 45 or > 315;
+    }
+
+    private void ComprobarSiEstaEnLaCarretera()
     {
         if (transform.position.y - carretera.transform.position.y is >= 10 or <= -10)
         {
